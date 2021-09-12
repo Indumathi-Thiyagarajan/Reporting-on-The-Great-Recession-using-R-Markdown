@@ -1,0 +1,416 @@
+---
+title: "The GREAT RECESSION December 2007 to June 2009"
+author: "Indumathi Thiyagarajan"
+output:
+  word_document:
+    toc: yes
+  html_notebook:
+    highlight: default
+    number_sections: yes
+    theme: lumen
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+  html_document:
+    df_print: paged
+    toc: yes
+---
+
+  
+
+```{r Global Setup, include=FALSE, echo=FALSE}
+
+# Setting up some global options for the knitr.
+# General principle is that local options over-ride the global.
+# More knitr options are available here: https://yihui.name/knitr/options/
+
+knitr::opts_chunk$set(
+	#Chunk Code Options
+	echo = FALSE,
+	include = TRUE,
+	results = 'asis', 
+	comment = NA, 
+	prompt = FALSE,
+	
+	#Display Options
+	cache = FALSE,
+
+	# Plot Options
+	fig.width = 7,
+	fig.height = 5,
+	
+	fig.retina = 2,
+	fig.align = 'center'
+	)
+
+options(digits = 4)
+
+```
+
+```{r Libraries, include =FALSE}
+
+library(knitr)
+
+library(kableExtra)
+library(DT)
+
+library(tidyverse)
+library(psych)
+library(Hmisc)
+library(ggthemes)
+library(plotly)
+
+library(summarytools)
+
+
+```
+
+
+```{r SummaryTools Setup, include =FALSE}
+
+opts_chunk$set(
+	comment=NA, 
+	prompt=FALSE, 
+	cache=FALSE, 
+	echo=TRUE, 
+	results='asis'
+)
+
+st_options(
+	plain.ascii = FALSE,       
+    style = "rmarkdown",       
+#	results = 'asis',
+    footnote = NA,             
+	subtitle.emphasis = TRUE
+)
+st_css()
+
+
+```
+
+
+#INTRODUCTION:
+
+After eighteen months of recession, the longest since the Great Depression of the 1930's, growth returned to the U.S economy in the summer of 2009. The recession may now be officially over, but its effects live on the form of unemployment, a host oof associated labor problems, and the on-going threat of double dip recession even in 2019. The great recession has transformed the social an economic life of the country. Today, most economists believe the Great Recession of 2007-2009 superseded the 1973-1975 recession in intensity. After 2011, the economy started to grow where companies hired again, consumers started spending, and businesses started to invest. That doesn't mean everyone has gotten their jobs back or businesses are investing more than before the recession. It just means a country's overall economy is expanding or growing on a somewhat more consistent basis.
+
+Reference: 1.The great recession by David B. Grusky, Bruce Western
+           2.https://www.cnbc.com/id/43563081
+
+
+# CAUSE OF RECESSION:
+##Subprime mortgage crisis(2006) :
+
+The first signs of the Great Recession started in 2006 when housing prices began falling. In 2006, the subprime mortgage crisis erupted. On November 17, 2006, the Commerce Department warned that October's new home permits were 28 percent lower than the year before. At this point, the mortgage crisis could have been prevented. But the Bush administration and the Federal Reserve did not realize how grave those early warning signs were. They ignored declines in the inverted yield curve. Instead, they thought the strong money supply and low-interest rates would restrict any problems to the real estate industry. These interest-only loans were offered to subprime borrowers. These high-risk people are most likely to default on a loan. The banks offered them low interest rates.  But this "too-good-to-be-true" loan type resets to a much higher rate after a certain period. Home prices fell at the same time interest rates reset. Their defaults caused the subprime mortgage crisis.
+
+```{r}
+library(readxl)
+Home_price <- read_excel("~/Data source/sq feet price of one family homes.xlsx")
+View(Home_price)
+qplot(data = Home_price,x=Year,y=median_price_per_squarefeet)+
+  geom_line(size = 1, color = "black")+
+  geom_text(aes(x= Year ,y= median_price_per_squarefeet, label= Year ))+
+  labs(title = "SUBPRIME MORTAGE CRISIS \n Home prices started to decline in 2006",
+       subtitle = "(2004-2010)",
+       caption = "Data from the FRED",
+       tag = "figure 1",
+       x = "Year",
+       y = "  \nmedian_price_per_squarefeet")+
+  theme_economist()
+
+```
+
+
+Banks had sold too many mortgage-backed securities than what could be supported by good mortgages. That summer, Standard and Poor's and Moody's credit ratings services both announced their intention to reduce the ratings on more than 100 bonds backed by second-lien subprime mortgages. Standard and Poor's also placed more than 600 securities backed by subprime residential mortgages on "credit watch". By then, as the subprime crisis continued, housing prices across the country began to fall, due to a glut of new homes on the market, so millions of homeowners and their mortgage lenders were suddenly "underwater," meaning their homes were valued less than their total loan amounts. In August 2007, the Federal Reserve responded to the subprime mortgage crisis by adding $24 billion in liquidity to the banking system.By the end of 2006, Many people started selling their home and the homeowners rate declined
+```{r}
+homeownership_rate_2_ <- read_excel("~/Data source/homeownership rate (2).xls")
+View(homeownership_rate_2_)
+ggplot(homeownership_rate_2_)+aes(x=observation_year, y=homeownership_rate) + 
+  geom_text(aes(x= observation_year,y=homeownership_rate , label=  observation_year, size = 3))+
+  labs(title = "SUBPRIME MORTAGE CRISIS \nHome owners rate started to decline in 2006",
+       subtitle = "(2004-2018)",
+       caption = "Data from the FRED",
+       tag = "figure 2",
+       x = "observation_year",
+       y = "  \nHomeownership_Rate")+
+  geom_line(linetype='dashed', color='Darkgreen', size=1.2)+
+  geom_point(color='deeppink3', alpha= 1)+
+  theme_economist_white()
+```
+
+#DURING RECESSION (Dec 2007 - June 2009 ):
+
+##Fed lowered interest rates :
+On April 17, 2007, the Federal Reserve announced that the federal financial regulatory agencies that oversee lenders would encourage them to work with lenders to work out loan arrangements rather than foreclose. Alternatives to foreclosure include converting the loan to a fixed-rate mortgage, and receiving credit counseling through the Center for Foreclosure Solutions. Banks that worked with borrowers in low-income areas could also receive Community Reinvestment Act benefits.
+
+In September, the Fed began lowering interest rates. Interest rates were at 5.25 percent in September 2007.  But the Fed didn't drop rates far enough, or fast enough, to calm markets. By the end of 2008, the Fed had reduced the target interest rate to zero percent for the first time in history in hopes of once again encouraging borrowing and, by extension, capital investment.
+
+##Stock Market crash :
+On October 9 2007, the U.S. stock market reached its all-time high, as the key Dow Jones Industrial Average exceeded 14,000 for the first time in history. On September 29, 2008, the stock market crashed.  The Dow Jones Industrial Average fell 777.68 points in intra-day trading. Over the next 18 months, the Dow lost more than half its value, falling to 6,547 points. Although a stock market crash can cause a recession, in this case it had already begun. But the crash of 2008 made a bad situation much, much worse.
+
+```{r}
+dow_jones <- read_excel("~/Data source/dow jones.xlsx")
+View(dow_jones)
+p<- ggplot(dow_jones, aes(Year, Average_closing_by_year))+
+  geom_line(size=1, color = "Brown")+
+  geom_text(aes(x= Year ,y= Average_closing_by_year, label= Year , size = 5))+
+  geom_point(aes(colour = Year))+
+  labs(title = "STOCK MARKET CRASH \nEffect of recession on Dow Jones average closing by year",
+       subtitle = "(2005-2019)",
+       caption = "Data from the FRED",
+       tag = "figure 4",
+       x = "Year",
+       y = "Average closing by year")+
+  theme_calc()
+ggplotly(p)
+```
+
+
+##Drop in Dollar value :
+
+
+
+
+```{r}
+library(readxl)
+us_dollar_index_historical_chart <- read_excel("~/Data source/us-dollar-index-historical-chart.xlsx")
+View(us_dollar_index_historical_chart)
+p<- ggplot(us_dollar_index_historical_chart, aes(Date, value))+
+  geom_line(size=1, color = "red")+
+  labs(title = "DROP IN DOLLAR VALUE",
+       subtitle = "(2005-2019)",
+       caption = "Data from the FRED",
+       tag = "figure 4",
+       x = "Year",
+       y = "Dollar value")+
+  theme_gray()
+ggplotly(p)
+
+```
+
+
+
+##Bank Failures:
+
+The banking crisis that ensued spelled the demise of hundreds of institutions: From 2008 through 2015, more than 500 banks failed, according to Federal Deposit Insurance Corporation (FDIC) data. In contrast, in the 7 years that preceded the recession, 25 banks failed.During and immediately after the Great Recession, US bank failures ballooned, spiking to roughly 150 in both 2009 and 2010. Since 2015, bank failures??? have fallen to single-digit numbers.
+
+```{r}
+#bank failures by year
+library(readr)
+bank_failures <- read_csv("~/Data source/bank failures.csv")
+bank_failures = mutate(bank_failures, Number_of_failures= MERGERS + PAID_OFF)
+view(bank_failures)
+plot_ly(data = bank_failures, x = ~YEAR, y = ~Number_of_failures, type = 'scatter', mode = 'lines')%>%
+  layout(title = "COMMERCIAL BANK FAILURES BY YEAR",
+         xaxis = list(title = "YEAR"),
+         yaxis = list (title = "NUMBER OF BANK FAILURES"))
+  
+```
+
+```{r}
+library(readxl)
+bank_failures_in_years <- read_excel("~/Data source/bank failures in years.xlsx")
+View(bank_failures_in_years)
+j<-ggplot(bank_failures_in_years) +
+  geom_col(aes(x = factor(Year), y = Bank_failures, fill=factor(Total_assets_in_Millions)))+
+  labs(title = "Bank failures by year with total asserts indicated on color")
+ggplotly(j)
+```
+
+#EFFECT OF RECESSION ON ECONOMIC FACTORS:
+
+##Effect of recession on "Employment" :
+
+Job losers are workers who permanently lost a (stable or temporary) job in the last few years and who are currently unemployed or out of the labour force. Job losers are examined as a stock, whose demographic characteristics are identified, together with the last job held and the length of time without a job. Around 9956 people lost the job at the end of recession by september 2009.
+
+```{r}
+library(readxl)
+job_loosers <- read_excel("~/Data source/job loosers.xls")
+View(job_loosers)
+C <-ggplot(job_loosers, aes(observation_date,job_losers))+
+  geom_point(aes(colour = observation_date))+
+  geom_smooth(se= FALSE)+
+  labs(title = "EFFECT OF RECESSION ON EMPLOYMENT", x= "OBSERVATION YEAR",y="JOB LOSERS IN THOUSANDS", colour="year",
+       subtitle = "(2005-2014)",
+       caption = "Data from the FRED",
+       x = "Observation year",
+       y = "Job losers in thousands")+
+  theme_bw()
+ggplotly(C)
+
+
+```
+
+The unemployment rate is the share of the labor force that is jobless, expressed as a percentage. It is a lagging indicator, meaning that it generally rises or falls in the wake of changing economic conditions, rather than anticipating them. When the economy is in poor shape and jobs are scarce, the unemployment rate can be expected to rise. When the economy is growing at a healthy rate and jobs are relatively plentiful, it can be expected to fall. In the year 2010, Unemployment rate reached 9.6
+
+```{r}
+library(readxl)
+UNRATE <- read_excel("~/Data source/UNRATE.xls")
+View(UNRATE)
+qplot(data = UNRATE,x=observation_date,y=unemp_rate,size=I(5), color="orange")+
+  geom_line(size = 2, color = "blue")+
+  geom_text(aes(x= observation_date,y=unemp_rate, label= unemp_rate,size = 3))+
+  labs(title = "Effect of recession on Unemployment rate \nUnemployment rate approcahed 10 by 2010",
+       subtitle = "(2006-2011)",
+       caption = "Data from the FRED",
+       x = "Observation year",
+       y = "Unemployment rate")+
+  theme_bw()
+```
+
+
+
+## Effect of recession on "Deliquency Rate":
+
+A delinquency rate is the percentage of loans within a loan portfolio that have delinquent payments. Delinquent refers to a situation where a borrower is late or overdue on a payment, such as income taxes, a mortgage, an automobile loan, or a credit card account. We can clearly see from below graph that deliquency rate has increased on credit card loans, commercial and business loans and single family residential mortage loans. I predict, Unemployment and economic crash are the reasons which made people unable to pay their loan amount to the borrower by time. 
+
+```{r}
+library(plotly)
+
+library(readxl)
+deliquecy_rate_on_mortages <- read_excel("~/Data source/deliquecy rate on mortages.xls")
+View(deliquecy_rate_on_mortages)
+colors <- c('#4AC6B7', '#1972A4', '#965F8A', '#FF7070', '#C61951')
+
+p <- plot_ly( deliquecy_rate_on_mortages, x = ~Observation_year, y = ~Deliquency_rate, type = 'scatter', mode = 'markers', size = ~Deliquency_rate, color = ~Loan_type, colors = colors,
+             sizes = c(10, 50),
+             marker = list(opacity = 0.5, sizemode = 'diameter', line = list(width = 2, color = '#FFFFFF')),
+             hoverinfo = 'text',
+             text = ~paste('Loan type :', Loan_type , '<br>Deliquency rate:',Deliquency_rate , 'year :', Observation_year )) %>%
+  layout(title = 'EFFECT OF DELIQUENCY RATE BY LOAN TYPE
+         ( Rate on Residential loan kept increasing till 2010 while
+         Credit card and Commercial loans kept increasing till 2009)',
+         xaxis = list(showgrid = FALSE),
+         yaxis = list(showgrid = FALSE),
+         showlegend = FALSE)
+ggplotly(p)
+
+```
+
+
+##Effect of recession on " Output in manufaturing, electric and gas industry" :
+
+The real output in the manufacturing, mining, electric and gas industries, relative to a base year is measured monthly as the industrial production index (IPI).It also measures capacity, an estimate of the production levels that could be sustainably maintained; and capacity utilization, the ratio of actual output to capacity.
+Within the overall IPI there are a number of sub-indices providing a detailed look at the output of highly specific industries: residential gas sales, ice cream and frozen desert, carpet and rug mills, spring and wire product, pig iron, audio and video equipment, and paper are just a few of the dozens of industries for which monthly production data is available. Industry-level data are useful for managers and investors within specific lines of business, while the composite index is an important macroeconomic indicator for economists and investors. Fluctuations within the industrial sector account for most of the variation in overall economic growth, so a monthly metric helps keep investors apprised of shifts in output. 
+
+```{r}
+library(readxl)
+industrial_production_index <- read_excel("~/Data source/industrial_production_index.xls")
+plot_ly(industrial_production_index) %>%
+  add_trace(x = ~observation_date, y = ~prod_index, 'scatter', mode = 'lines', name = 'industrial production index',
+            marker = list(color = '#C9EFF9')) %>%
+add_annotations(
+    x=industrial_production_index$observation_date[which.min(industrial_production_index$prod_index)],
+    y=industrial_production_index$prod_index[which.min(industrial_production_index$prod_index)],
+    text = "Lowest capacity utilization rate observed = 86%")%>%
+  layout(title = 'EFFECT OF RECESSION ON INDUSTRIAL PRODUCTION INDEX
+         ( Data from FRED) \nObserved Year : 2005 - 2013',
+         xaxis = list(showgrid = FALSE),
+         yaxis = list(showgrid = FALSE),
+         showlegend = FALSE)
+
+```
+
+
+
+
+##Effect of recession on " Capacity utilization rate":
+
+The capacity utilization rate measures the proportion of potential economic output that is actually realized. Displayed as a percentage, the capacity utilization level provides insight into the overall slack that is in an economy or a firm at a given point in time.The Federal Reserve gathers and publishes data on capacity utilization in the U.S. economy. Capacity utilization tends to fluctuate with business cycles, with firms adjusting production volumes in response to changing demand. Demand declines sharply during recessions, as unemployment rises, wages fall, consumer confidence wanes, and business investments dip.The deepest decline occurred so far in 1982 and 2009, when capacity utilization fell to 70.9% and 66.7%, respectively.The 2009 decline is the effect of great recession.
+```{r}
+library(readxl)
+capacity <- read_excel("~/Data source/TCU.xls")
+plot_ly(data = capacity,
+        x =~observation_date,
+        y=~capacity_unit,
+        type ="scatter",
+        color = "Red",
+        mode="markers")%>%
+  add_annotations(
+    x=capacity$observation_date[which.min(capacity$capacity_unit)],
+    y=capacity$capacity_unit[which.min(capacity$capacity_unit)],
+    text = "Lowest capacity utilization rate observed = 66%")%>%
+  layout(title = 'EFFECT OF RECESSION ON CAPACITY UTILIZATION RATE
+         ( Data from FRED) \nObserved Year : 2005 - 2012',
+         xaxis = list(showgrid = FALSE),
+         yaxis = list(showgrid = FALSE),
+         showlegend = FALSE)
+```
+
+
+## Effect of recession on "Construction Sector":
+
+Construction spending represents about 20% of the gross domestic product, making it a very important source of information. Economists look to construction spending for clues about the overall economy. The construction industry is one of the first to go into a recession when the economy declines and likewise, the first to recover as conditions improve. The data covers three important areas: private construction (residential and nonresidential) and public construction. The residential category includes single family homes and apartments. Nonresidential construction includes factories, offices, hotels, motels, churches, hospitals, and private schools. Finally, the public sector covers highways, streets, military reservations, water supply facilities, public school buildings, housing projects, and sewer systems.
+
+In the following chart, We can clearly predict that spending on construction sector started to decline in 2007 and the lowest spending reached in 2011 of 9.45 million.
+
+```{r}
+library(readxl)
+construction_spending <- read_excel("~/Data source/construction spending.xls")
+view(construction_spending)
+options(scipen=999)
+plot_ly(data = construction_spending,
+        x =~Year,
+        y=~Spending_in_millions,
+        type ="scatter",
+        mode="lines",
+        color = "green",
+        marker = list(color = 'black'))%>%
+  add_annotations(
+    x=construction_spending$Year[which.min(construction_spending$Spending_in_millions)],
+    y=construction_spending$Spending_in_millions[which.min(construction_spending$Spending_in_millions)],
+    text = "Lowest construction spending")%>%
+  layout(title = 'EFFECT OF RECESSION ON CONSTRUCTION SPENDING IN MILLION EVERY YEAR
+         ( Data from census.gov) \nObserved Year : 2006 - 2012',
+         xaxis = list(showgrid = TRUE),
+         yaxis = list(showgrid = TRUE),
+         showlegend = FALSE)
+
+
+
+```
+
+
+
+#AFTER THE GREAT RECESSION:
+
+##Dollar value strengthened :
+
+After the recession,Between 2011 and 2016 the dollar strengthened. There were six reasons the dollar became so strong:
+
+1.Investors worried about the Greek debt crisis. It weakened demand for the euro, the world's second choice for a global currency. 
+2.The European Union struggled to boost economic growth through quantitative easing. 
+3.In 2015, economic reform slowed China's growth. It pushed investors back into the U.S. dollar.
+4.The dollar is a haven during any global crisis. Investors bought U.S. Treasurys to avoid risk as the world recovered unevenly from the 2008 financial crisis and recession.
+5.Despite reforms, both China and Japan continued to purchase dollars to control the value of their currencies. It helped them boost exports by making them cheaper. 
+6.The Federal Reserve signaled that it would raise the fed funds rate. It did so in 2015. Forex traders took advantage of the higher rates as Europe's interest rates declined.
+```{r}
+library(readxl)
+us_dollar_index_historical_chart <- read_excel("~/Data source/us-dollar-index-historical-chart.xlsx", 
+                                               col_types = c("date", "numeric"))
+
+plot_ly(data = us_dollar_index_historical_chart,
+        x = ~Date,
+        y= ~value,
+        type ="scatter",
+        mode="lines",
+        linecolor = "green",
+        marker = list(color = 'black'))%>%
+  add_annotations(
+    x=us_dollar_index_historical_chart$Date[which.min(us_dollar_index_historical_chart$value)],
+    y=us_dollar_index_historical_chart$value[which.min(us_dollar_index_historical_chart$value)],
+    text = "Dollar value index at 80.24, JUly 2011")%>%
+  
+add_annotations(x=us_dollar_index_historical_chart$Date[which.max(us_dollar_index_historical_chart$value)],
+    y=us_dollar_index_historical_chart$value[which.max(us_dollar_index_historical_chart$value)],
+    text = "Dollar value index at 103, Dec 2016")%>%
+  
+  layout(title = 'RISE IN DOLLAR VALUE AFTER RECESSION (2011-2016)Data - census.gov',
+         xaxis = list(showgrid = TRUE),
+         yaxis = list(showgrid = TRUE),
+         showlegend = FALSE)
+
+
+
+```
+
